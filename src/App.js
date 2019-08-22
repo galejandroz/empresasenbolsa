@@ -35,11 +35,17 @@ class App extends Component {
                     },
                     cargando: true
                 }, () => {
-                setTimeout(() => {
-                    this.setState({
-                        cargando: false
-                    })
-                }, 1000);
+                    setTimeout(() => {
+                        this.setState({
+                            cargando: false
+                        })
+                    }, 1000);
+                })
+            })
+            .catch(e => {
+                this.setState({
+                    cargando: false,
+                    resultado:{}
                 })
             })
     } 

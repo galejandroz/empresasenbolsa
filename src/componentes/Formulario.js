@@ -2,10 +2,7 @@ import React from 'react';
 
 const Formulario = ({verCotizacion, EMPRESAS}) => {
 
-    const obtenerValor = e => {
-        const empresa = e.target.value;
-        verCotizacion(empresa);
-    }
+    const obtenerValor = e => verCotizacion(e.target.value);
 
     return ( 
         <div className="row">
