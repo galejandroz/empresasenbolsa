@@ -19,35 +19,31 @@ class App extends Component {
             cargando: true
         });
 
-        let url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${empresa}&outputsize=compact&apikey=X86NOH6II01P7R24`;
+        const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${empresa}&outputsize=compact&apikey=X86NOH6II01P7R24`;
 
-        await Axios.get(url)
-            .then(respuesta => respuesta.data['Time Series (Daily)'])
-            .then(dias => [dias[Object.keys(dias)[0]], Object.keys(dias)[0], dias[Object.keys(dias)[1]], Object.keys(dias)[1]])
-            .then(resp => {
-                this.setState({
-                    resultado: {
-                        close: resp[0]['4. close'],
-                        date: resp[1],
-                        closeYesterday: resp[2]['4. close'],
-                        yesterday: resp[3],
-                        empresa: EMPRESAS.find(obj => obj.id === empresa).name
-                    },
-                    cargando: true
-                }, () => {
-                    setTimeout(() => {
-                        this.setState({
-                            cargando: false
-                        })
-                    }, 1000);
-                })
-            })
-            .catch(e => {
-                this.setState({
-                    cargando: false,
-                    resultado:{}
-                })
-            })
+        const res = await Axios.get(url);
+
+        if(res.data['Time Series (Daily)'] === undefined ){
+            this.setState({
+                cargando: false,
+                resultado:{}
+            });
+        }else{
+            const dias = res.data['Time Series (Daily)'];
+
+            const resultado = {
+                    close:dias[Object.keys(dias)[0]]['4. close'], 
+                    date:Object.keys(dias)[0], 
+                    closeYesterday:dias[Object.keys(dias)[1]]['4. close'], 
+                    yesterday:Object.keys(dias)[1], 
+                    empresa:EMPRESAS.find(obj => obj.id === empresa).name
+                };
+
+            this.setState({
+                resultado,
+                cargando: false
+            });
+        }
     } 
   
     render() {
